@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://camel.apache.org/schema/spring
+           http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
+        <route id="get-all-users-route">
+            <from uri="servlet:/getallusers"/>
+            <to uri="bean:userService?method=getAllUsers"/>
+            <marshal>
+                <json/>
+            </marshal>
+        </route>
+
+        <route id="create-user-route">
+            <from uri="servlet:/createuser"/>
+            <unmarshal>
+                <json/>
+            </unmarshal>
+            <to uri="bean:userService?method=createUser"/>
+            <setHeader name="CamelHttpResponseCode">
+                <constant>201</constant>
+            </setHeader>
+            <marshal>
+                <json/>
+            </marshal>
+        </route>
+    </camelContext>
+
+</beans>
